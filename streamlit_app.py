@@ -69,27 +69,33 @@ def main():
 
             # Display predicted disease and details
             st.success(f'Predicted disease: {predicted_disease}')
-            st.write(f'Description: {dis_des}')
+
+            # Display disease description
+            st.subheader('Description:')
+            st.write(dis_des)
+
 
             # Display precautions as bullet points
-            st.write('Precautions:')
-            for precaution in precautions.split('\n'):
+            st.subheader('Precautions:')
+            precautions_list = precautions.split('\n')
+            for precaution in precautions_list:
                 st.write(f'- {precaution}')
 
             # Display medications as bullet points
-            st.write('Medications:')
-            for medication in medications.strip("[]' ").split(', '):
+            st.subheader('Medications:')
+            medications_list = medications.strip("[]' ").split(', ')
+            for medication in medications_list:
                 st.write(f'- {medication}')
 
             # Display recommended diet as bullet points
-            st.write('Recommended Diet:')
-            for diet in rec_diet.strip("[]' ").split(', '):
+            st.subheader('Recommended Diet:')
+            diet_list = rec_diet.strip("[]' ").split(', ')
+            for diet in diet_list:
                 st.write(f'- {diet}')
 
             # Display workout
-            st.write('Workout:')
+            st.subheader('Workout:')
             st.write(workout)
-
 
 if __name__ == '__main__':
     main()
