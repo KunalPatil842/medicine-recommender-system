@@ -25,7 +25,15 @@ def helper(dis):
     med = medications[medications['Disease'] == dis]['Medication'].values.tolist()
     die = diets[diets['Disease'] == dis]['Diet'].values.tolist()
     wrkout = workout[workout['disease'] == dis]['workout'].values.tolist()
-    return desc, pre, med, die, wrkout
+
+    # Convert lists to bullet points
+    pre_bullet_points = "\n".join([f"- {p}" for p in pre])
+    med_bullet_points = "\n".join([f"- {m}" for m in med])
+    die_bullet_points = "\n".join([f"- {d}" for d in die])
+    wrkout_bullet_points = "\n".join([f"- {w}" for w in wrkout])
+
+    return desc, pre_bullet_points, med_bullet_points, die_bullet_points, wrkout_bullet_points
+
 
 # Define diseases_list
 diseases_list = {15: 'Fungal infection', 4: 'Allergy', 16: 'GERD', 9: 'Chronic cholestasis', 14: 'Drug Reaction', 33: 'Peptic ulcer diseae', 1: 'AIDS', 12: 'Diabetes ', 17: 'Gastroenteritis', 6: 'Bronchial Asthma', 23: 'Hypertension ', 30: 'Migraine', 7: 'Cervical spondylosis', 32: 'Paralysis (brain hemorrhage)', 28: 'Jaundice', 29: 'Malaria', 8: 'Chicken pox', 11: 'Dengue', 37: 'Typhoid', 40: 'hepatitis A', 19: 'Hepatitis B', 20: 'Hepatitis C', 21: 'Hepatitis D', 22: 'Hepatitis E', 3: 'Alcoholic hepatitis', 36: 'Tuberculosis', 10: 'Common Cold', 34: 'Pneumonia', 13: 'Dimorphic hemmorhoids(piles)', 18: 'Heart attack', 39: 'Varicose veins', 26: 'Hypothyroidism', 24: 'Hyperthyroidism', 25: 'Hypoglycemia', 31: 'Osteoarthristis', 5: 'Arthritis', 0: '(vertigo) Paroymsal  Positional Vertigo', 2: 'Acne', 38: 'Urinary tract infection', 35: 'Psoriasis', 27: 'Impetigo'}
@@ -38,33 +46,55 @@ def get_predicted_value(patient_symptoms):
     return diseases_list[svc.predict([input_vector])[0]]
 
 # Main Streamlit app
+# Main Streamlit app with enhanced styling
+# Main Streamlit app
+# Main Streamlit app
 def main():
     st.title('Disease Prediction App')
 
+    # Input box for symptoms
     symptoms = st.text_input('Enter symptoms separated by commas (e.g., itching, chills):')
 
+    # Predict button
     if st.button('Predict'):
+        # Handling empty input
         if symptoms == "":
             st.error("Please enter symptoms")
         else:
+            # Processing input symptoms
             user_symptoms = [s.strip() for s in symptoms.split(',')]
             user_symptoms = [symptom.strip("[]' ") for symptom in user_symptoms]
+
+            # Getting predicted disease and additional information
             predicted_disease = get_predicted_value(user_symptoms)
             dis_des, precautions, medications, rec_diet, workout = helper(predicted_disease)
 
+            # Display predicted disease and details
             st.success(f'Predicted disease: {predicted_disease}')
             st.write(f'Description: {dis_des}')
+
+            # Display precautions as bullet points
             st.write('Precautions:')
-            for precaution in precautions:
+            for precaution in precautions.split('\n'):
                 st.write(f'- {precaution}')
+
+            # Display medications as bullet points
             st.write('Medications:')
-            for medication in medications:
+            for medication in medications.strip("[]' ").split(', '):
                 st.write(f'- {medication}')
+
+            # Display recommended diet as bullet points
             st.write('Recommended Diet:')
-            for diet in rec_diet:
+            for diet in rec_diet.strip("[]' ").split(', '):
                 st.write(f'- {diet}')
+
+            # Display workout
             st.write('Workout:')
             st.write(workout)
 
+
 if __name__ == '__main__':
     main()
+
+
+
