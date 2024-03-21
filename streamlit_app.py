@@ -48,8 +48,6 @@ def get_predicted_value(patient_symptoms):
     return diseases_list[svc.predict([input_vector])[0]]
 
 # Main Streamlit app
-import time  # for progress bar
-
 import streamlit as st
 import time  # for progress bar
 
@@ -57,18 +55,7 @@ def main():
     st.set_page_config(page_title="Disease Prediction Tool", page_icon="⚕️", layout="wide")
 
     # Display logo or image (replace with your image path)
-    st.markdown(
-        f"""
-        <style>
-            .round-image {{
-                border-radius: 25px;
-                overflow: hidden;
-            }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    st.image("static/img.png", width=200, output_format='PNG',  use_column_width=False, caption=None, clamp=False, channels='RGB', format='JPEG', caption_position='below',  use_container_width=False, **kwargs)
+    st.image("static/img.png", width=200)
 
     st.title('AI-powered Disease Prediction')
 
@@ -134,6 +121,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
