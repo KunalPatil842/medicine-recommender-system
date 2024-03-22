@@ -61,9 +61,9 @@ def main():
 
     # Input box for symptoms with placeholder text
     symptoms = st.text_input(
-        'Enter your symptoms separated by commas (e.g., fever, cough)',
+        'Enter your symptoms separated by commas (e.g., itching, skin_rash, continuous_sneezing, joint_pain, stomach_pain, vomiting, fatigue, weight_loss, high_fever, cough, breathlessness, sweating, headache, nausea, back_pain, constipat)',
         key="symptoms",
-        placeholder="e.g., fever, cough"
+        placeholder="e.g., itching, cough, vomiting"
     )
 
     # Predict button
@@ -93,20 +93,16 @@ def main():
             for precaution in precautions_list:
                 st.write(f'- {precaution}')
 
-            # Medications with tooltips (consider using markdown for better formatting)
-            st.subheader('Medications:')
-            medications_list = medications.strip("[]' ").split(', ')
-            for medication in medications_list:
-                tooltip_text = f"Consult a doctor before taking {medication}"
-                st.write(
-                    f'- {medication}', key=medication, on_click=None, help=tooltip_text
-                )
-
+            # Display medications as bullet points
+            st.write('Medications:')
+            for medication in medications.strip("[]' ").split(', '):
+                st.write(f'- {medication.strip("\'")}')
+            
             # Display recommended diet as bullet points
-            st.subheader('Recommended Diet:')
-            diet_list = rec_diet.strip("[]' ").split(', ')
-            for diet in diet_list:
-                st.write(f'- {diet}')
+            st.write('Recommended Diet:')
+            for diet in rec_diet.strip("[]' ").split(', '):
+                st.write(f'- {diet.strip("\'")}')
+
 
             # Display workout
             st.subheader('Workout:')
@@ -116,7 +112,7 @@ def main():
             st.download_button(
                 'Download Results',
                 data=f"{predicted_disease}\n{dis_des}\n{precautions}\n{medications}\n{rec_diet}\n{workout}",
-                file_name='disease_prediction.txt'
+                file_name='disease_prediction.pdf'
             )
 
 if __name__ == '__main__':
