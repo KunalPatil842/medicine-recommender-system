@@ -51,78 +51,91 @@ def get_predicted_value(patient_symptoms):
 import streamlit as st
 import time  # for progress bar
 
+import streamlit as st
+
 def main():
-    st.set_page_config(page_title="Disease Prediction Tool", page_icon="⚕️", layout="wide")
+  """Main function for the disease prediction application."""
 
-    # Display logo or image (replace with your image path)
-    st.image("static/img.png", width=200)
+  # Page configuration
+  st.set_page_config(
+      page_title="Disease Prediction Tool",
+      page_icon="⚕️",
+      layout="wide"
+  )
 
-    st.title('AI-powered Disease Prediction')
+  # Logo or image (replace with your image path)
+  st.image("static/img.png", width=200)
 
-    # Input box for symptoms with placeholder text
-    symptoms = st.text_input(
-        'Enter your symptoms separated by commas (e.g., itching, skin_rash, continuous_sneezing, joint_pain, stomach_pain, vomiting, fatigue, weight_loss, high_fever, cough, breathlessness, sweating, headache, nausea, back_pain, constipat)',
-        key="symptoms",
-        placeholder="e.g., itching, cough, vomiting"
+  # Title
+  st.title('AI-powered Disease Prediction')
+
+  # Input box for symptoms
+  symptoms = st.text_input(
+      'Enter your symptoms separated by commas (e.g., itching, skin_rash):',
+      key="symptoms",
+      placeholder="e.g., itching, cough, fever"
+  )
+
+  # Predict button
+  if st.button('Predict'):
+    # Empty input handling
+    if not symptoms:
+      st.error("Please enter your symptoms.")
+      return
+
+    # Process symptoms
+    user_symptoms = [symptom.strip() for symptom in symptoms.split(',')]
+    user_symptoms = [symptom.strip("[]' ") for symptom in user_symptoms]
+
+    # Get prediction and details
+    predicted_disease = get_predicted_value(user_symptoms)
+    if not predicted_disease:
+      st.error("Prediction unavailable. Please try again with different symptoms.")
+      return
+
+    dis_des, precautions, medications, rec_diet, workout = helper(predicted_disease)
+
+    # Display results
+    st.success(f'Predicted disease: {predicted_disease}')
+
+    # Disease description with tooltip
+    st.subheader('Description:')
+    st.markdown(dis_des, unsafe_allow_html=True)
+
+    # Precautions as bullet points
+    st.subheader('Precautions:')
+    precautions_list = precautions.split('\n')
+    for precaution in precautions_list:
+      st.write(f'- {precaution}')
+
+    # Medications as bullet points
+    st.subheader('Medications:')
+    cleaned_medications = medications.strip("[]' ").split(", ")  # Clean medications
+    for medication in cleaned_medications:
+      st.write(f'- {medication.strip()}')
+
+    # Recommended diet as bullet points
+    st.subheader('Recommended Diet:')
+    for diet in rec_diet.strip("[]' ").split('\n'):
+      diet = diet.strip("'")
+      if diet:
+        st.write(f'- {diet}')
+
+    # Workout
+    st.subheader('Workout:')
+    st.write(workout)
+
+    # Download button
+    st.download_button(
+      'Download Results',
+      data=f"{predicted_disease}\n{dis_des}\n{precautions}\n{medications}\n{rec_diet}\n{workout}",
+      file_name='disease_prediction.pdf'
     )
 
-    # Predict button
-    if st.button('Predict'):
-        # Handling empty input
-        if symptoms == "":
-            st.error("Please enter symptoms")
-        else:
-            # Processing input symptoms
-            user_symptoms = [s.strip() for s in symptoms.split(',')]
-            user_symptoms = [symptom.strip("[]' ") for symptom in user_symptoms]
-
-            # Getting predicted disease and additional information
-            predicted_disease = get_predicted_value(user_symptoms)
-            dis_des, precautions, medications, rec_diet, workout = helper(predicted_disease)
-
-            # Display predicted disease and details
-            st.success(f'Predicted disease: {predicted_disease}')
-
-            # Disease description with tooltip
-            st.subheader('Description:')
-            st.markdown(dis_des, unsafe_allow_html=True)
-
-            # Display precautions as bullet points
-            st.subheader('Precautions:')
-            precautions_list = precautions.split('\n')
-            for precaution in precautions_list:
-                st.write(f'- {precaution}')
-
-            # Display medications as bullet points
-           
-            st.write('Medications:')
-            for medication in medications.strip("[]").split(", "):  # Remove brackets and split
-               st.write("- {}".format(medication.strip("'")))  # Remove any quotes
-
-            
-            # Display recommended diet as bullet points
-            st.write('Recommended Diet:')
-            for diet in rec_diet.strip("[]' ").split('\n'):
-                diet = diet.strip("'")
-                if diet:
-                    st.write('- {}'.format(diet))
-
-
-
-
-            # Display workout
-            st.subheader('Workout:')
-            st.write(workout)
-
-            # Download button for results
-            st.download_button(
-                'Download Results',
-                data=f"{predicted_disease}\n{dis_des}\n{precautions}\n{medications}\n{rec_diet}\n{workout}",
-                file_name='disease_prediction.pdf'
-            )
-
+# Run the app
 if __name__ == '__main__':
-    main()
+  main()
+
 
 
 
