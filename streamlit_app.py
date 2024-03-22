@@ -95,8 +95,9 @@ def main():
 
             # Display medications as bullet points
             st.write('Medications:')
-            for medication in medications.strip("[]' ").split(', '):
-                st.write('- {}'.format(medication.strip("'")))
+            for medication in medications.strip(" '").split(','):  # Remove only spaces and quotes
+                st.write('- {}'.format(medication.strip()))  # No need to strip quotes again
+
             
             # Display recommended diet as bullet points
             st.write('Recommended Diet:')
