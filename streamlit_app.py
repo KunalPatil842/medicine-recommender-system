@@ -96,7 +96,7 @@ def main():
             # Display medications as bullet points
             st.write('Medications:')
             for medication in medications.strip("[]' ").split(', '):
-                st.write(f'- {medication.strip("\'")}')
+                st.write('- {}'.format(medication.strip("'")))
             
             # Display recommended diet as bullet points
             st.write('Recommended Diet:')
